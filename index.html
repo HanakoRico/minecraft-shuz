@@ -8,11 +8,7 @@
 body{margin:0;font-family:'Arial Black',Arial,sans-serif;overflow:hidden}
 
 /* MAIN MENU */
-#menu{
-  position:fixed;inset:0;
-  background:url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hZ2VfNThy/cnRuYjVsOXNlMS5w/bmc') center/cover;
-  display:flex;align-items:center;justify-content:center;color:white
-}
+#menu{position:fixed;inset:0;background:url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hLmdpZg') center/cover;display:flex;align-items:center;justify-content:center;color:white}
 #menu::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.4)}
 
 #title-wrap{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:2;text-align:center}
@@ -38,7 +34,7 @@ body{margin:0;font-family:'Arial Black',Arial,sans-serif;overflow:hidden}
 #loading{display:none;position:fixed;inset:0;background:black;color:white;z-index:30;align-items:center;justify-content:center;flex-direction:column;text-align:center}
 .bar{width:300px;height:20px;border:2px solid white;margin-top:20px;overflow:hidden}
 .progress{height:100%;width:0%;background:lime;transition:width 0.05s linear}
-#loading-canvas{border:2px solid white;margin-top:20px}
+#loading-canvas{border:2px solid white;margin-top:20px;background:#000}
 
 /* PROFILE */
 #profile{display:none;position:fixed;inset:0;background:black;color:white;z-index:25;align-items:center;justify-content:center;flex-direction:column;text-align:center}
@@ -76,7 +72,7 @@ input{width:100%;margin:10px 0}
 </div>
 
 <div id="loading">
-  <h2 id="loadingText">Loading User...</h2>
+  <h2 id="loadingText">Loading...</h2>
   <div class="bar"><div class="progress" id="progressBar"></div></div>
   <canvas id="loading-canvas" width="120" height="120"></canvas>
 </div>
@@ -153,13 +149,13 @@ settings.onclick=()=>{document.getElementById('settingsModal').style.display='fl
 closeSettings.onclick=()=>{document.getElementById('settingsModal').style.display='none'};
 widthRange.oninput=()=>{worldMenu.style.width=widthRange.value+'px'};
 heightRange.oninput=()=>{worldMenu.style.height=heightRange.value+'px'};
-volumeRange.oninput=()=>{console.log("Volume:",volumeRange.value)};
+volumeRange.oninput=()=>{loadSound.volume=volumeRange.value/100;};
 
 // BACK FUNCTIONS
 function backToWorlds(){profile.style.display='none'; worldMenu.style.display='block';}
 function backToMenu(){worldMenu.style.display='none'; menu.style.display='flex';}
 
-// LOAD WORLD WITH PIXEL BUILD
+// LOAD WORLD WITH FALLING BLOCK EFFECT
 function loadWorld(w){
   worldMenu.style.display='none';
   profile.style.display='none';
@@ -171,36 +167,69 @@ function loadWorld(w){
   const img=new Image();
   img.crossOrigin='anonymous';
   img.src=w.img;
-  let progress=0;
-  const step=5;
-  let y=0;
+  const blockSize=6;
+  let blocks=[];
 
-  loadSound.currentTime=0;
-  loadSound.play();
-
-  const interval=setInterval(()=>{
-    progress+=1;
-    if(progress>100) progress=100;
-    progressBar.style.width=progress+'%';
-    loadingText.innerText=`Loading ${w.name}... ${progress}%`;
-
-    if(img.complete && y<canvas.height){
-      for(let i=0;i<canvas.width;i+=step){
-        ctx.drawImage(img,i,y,step,step,i,y,step,step);
+  img.onload=()=>{
+    const scale=Math.min(canvas.width/img.width, canvas.height/img.height);
+    for(let y=0;y<img.height;y+=blockSize){
+      for(let x=0;x<img.width;x+=blockSize){
+        const color=getAvgColor(img,x,y,blockSize);
+        blocks.push({x:x*scale, y:-blockSize*scale, targetY:y*scale, color});
       }
-      y+=step;
     }
+    shuffle(blocks);
+    loadSound.currentTime=0;
+    loadSound.play();
 
-    if(progress===100){
-      clearInterval(interval);
-      loading.style.display='none';
-      profile.style.display='flex';
-      pfp.src=w.img;
-      nameEl.innerText=w.name;
-      bioEl.innerText=w.bio;
+    let completed=0;
+    const total=blocks.length;
+
+    function animate(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
+      let doneCount=0;
+      for(const b of blocks){
+        if(b.y<b.targetY) b.y+=Math.random()*4+1;
+        else { b.y=b.targetY; doneCount++;}
+        ctx.fillStyle=b.color;
+        ctx.fillRect(b.x,b.y,blockSize*scale,blockSize*scale);
+      }
+      completed=doneCount;
+      progressBar.style.width=Math.floor((completed/total)*100)+'%';
+      loadingText.innerText=`Loading ${w.name}... ${Math.floor((completed/total)*100)}%`;
+      if(completed<total) requestAnimationFrame(animate);
+      else {
+        loading.style.display='none';
+        profile.style.display='flex';
+        pfp.src=w.img;
+        nameEl.innerText=w.name;
+        bioEl.innerText=w.bio;
+      }
     }
-  },40);
+    animate();
+  }
+}
+
+// HELPER FUNCTION TO GET AVERAGE COLOR
+function getAvgColor(img,x,y,size){
+  const tempCanvas=document.createElement('canvas');
+  const tctx=tempCanvas.getContext('2d');
+  tempCanvas.width=size; tempCanvas.height=size;
+  tctx.drawImage(img,-x,-y);
+  const data=tctx.getImageData(0,0,size,size).data;
+  let r=0,g=0,b=0,count=0;
+  for(let i=0;i<data.length;i+=4){
+    r+=data[i]; g+=data[i+1]; b+=data[i+2]; count++;
+  }
+  return `rgb(${Math.floor(r/count)},${Math.floor(g/count)},${Math.floor(b/count)})`;
+}
+
+// SHUFFLE FUNCTION
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
 }
 </script>
 

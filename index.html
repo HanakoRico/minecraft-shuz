@@ -5,176 +5,405 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Minecraft Menu Clone</title>
 <style>
-body{margin:0;font-family:'Arial Black',Arial,sans-serif;overflow:hidden}
+/* ------------------ GENERAL ------------------ */
+body {
+    margin: 0;
+    font-family: 'Arial Black', Arial, sans-serif;
+    overflow: hidden;
+    background: black;
+}
 
-/* MAIN MENU */
-#menu{position:fixed;inset:0;background:url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hZ2VfNThy/cnRuYjVsOXNlMS5w/bmc') no-repeat center/cover;display:flex;align-items:center;justify-content:center;color:white}
-#menu::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.4)}
-#title-wrap{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:2;text-align:center}
-#title-inner{position:relative;display:inline-block}
-#title{font-size:72px;text-shadow:6px 6px 0 black,2px 2px 0 #555}
-#splash{position:absolute;right:-130px;top:28px;color:yellow;font-size:24px;transform:rotate(-20deg);animation:splashAnim 1.5s infinite alternate}
-@keyframes splashAnim{from{transform:rotate(-20deg) scale(1)}to{transform:rotate(-20deg) scale(1.1)}}
+/* ------------------ MAIN MENU ------------------ */
+#menu {
+    position: fixed;
+    inset: 0;
+    background: url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hZ2VfNThy/cnRuYjVsOXNlMS5w/bmc') no-repeat center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
 
-/* BUTTONS */
-#buttons{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:20px;transform:translateY(-70px)}
-.row{display:flex;gap:20px}
-.menu-btn{width:200px;height:50px;background:#6b6b6b;border:3px solid #2a2a2a;box-shadow:inset -3px -3px 0 #2a2a2a,inset 3px 3px 0 #9b9b9b;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.menu-btn:hover{background:#8a8a8a}
-.wide{width:420px}
+#menu::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+}
 
-/* WORLD MENU */
-#worldMenu{display:none;position:fixed;inset:0;background:#111;color:white;z-index:15;padding:20px}
-.world{display:flex;align-items:center;gap:15px;padding:10px;margin:10px 0;background:#333;cursor:pointer}
-.world:hover{background:#555}
-.world img{width:60px;height:60px;object-fit:cover;border:2px solid black}
+#title-wrap {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    text-align: center;
+}
 
-/* LOADING */
-#loading{display:none;position:fixed;inset:0;background:black;color:white;z-index:30;align-items:center;justify-content:center;flex-direction:column;text-align:center}
-.bar{width:300px;height:20px;border:2px solid white;margin-top:20px;overflow:hidden}
-.progress{height:100%;width:0%;background:lime;transition:width 0.05s linear}
-#loading-canvas{border:2px solid white;margin-top:20px;background:#000}
+#title-inner {
+    position: relative;
+    display: inline-block;
+}
 
-/* PROFILE */
-#profile{display:none;position:fixed;inset:0;background:black;color:white;z-index:25;align-items:center;justify-content:center;flex-direction:column;text-align:center}
-#pfp{width:120px;height:120px;border-radius:10px;margin-bottom:10px}
+#title {
+    font-size: 72px;
+    text-shadow: 6px 6px 0 black, 2px 2px 0 #555;
+}
 
-/* SETTINGS */
-#settingsModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
-#settingsBox{background:#2b2b2b;padding:20px;border:3px solid #111;color:white;width:300px;text-align:center}
-input{width:100%;margin:10px 0}
+#splash {
+    position: absolute;
+    right: -130px;
+    top: 28px;
+    color: yellow;
+    font-size: 24px;
+    transform: rotate(-20deg);
+    animation: splashAnim 1.5s infinite alternate;
+}
+
+@keyframes splashAnim {
+    from { transform: rotate(-20deg) scale(1); }
+    to { transform: rotate(-20deg) scale(1.1); }
+}
+
+/* ------------------ BUTTONS ------------------ */
+#buttons {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    transform: translateY(-70px);
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.menu-btn {
+    width: 200px;
+    height: 50px;
+    background: #6b6b6b;
+    border: 3px solid #2a2a2a;
+    box-shadow: inset -3px -3px 0 #2a2a2a, inset 3px 3px 0 #9b9b9b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-btn:hover {
+    background: #8a8a8a;
+}
+
+.wide {
+    width: 420px;
+}
+
+/* ------------------ WORLD MENU ------------------ */
+#worldMenu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #111;
+    color: white;
+    z-index: 15;
+    padding: 20px;
+}
+
+.world {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    margin: 10px 0;
+    background: #333;
+    cursor: pointer;
+}
+
+.world:hover {
+    background: #555;
+}
+
+.world img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border: 2px solid black;
+}
+
+/* ------------------ LOADING SCREEN ------------------ */
+#loading {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: white;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.bar {
+    width: 300px;
+    height: 20px;
+    border: 2px solid white;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: lime;
+    transition: width 0.05s linear;
+}
+
+#loading-canvas {
+    border: 2px solid white;
+    margin-top: 20px;
+    width: 120px;
+    height: 120px;
+}
+
+/* ------------------ PROFILE PAGE ------------------ */
+#profile {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: white;
+    z-index: 25;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+#pfp {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* ------------------ SETTINGS ------------------ */
+#settingsModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+#settingsBox {
+    background: #2b2b2b;
+    padding: 20px;
+    border: 3px solid #111;
+    color: white;
+    width: 300px;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    margin: 10px 0;
+}
 </style>
 </head>
 <body>
 
+<!-- MAIN MENU -->
 <div id="menu">
-  <div id="title-wrap">
-    <div id="title-inner">
-      <div id="title">Zone15</div>
-      <div id="splash">Now only on Minecraft!</div>
+    <div id="title-wrap">
+        <div id="title-inner">
+            <div id="title">Zone15</div>
+            <div id="splash">Now only on Minecraft!</div>
+        </div>
     </div>
-  </div>
 
-  <div id="buttons">
-    <div class="row">
-      <div class="menu-btn" id="play">Play</div>
-      <div class="menu-btn" id="quit">Quit</div>
+    <div id="buttons">
+        <div class="row">
+            <div class="menu-btn" id="play">Play</div>
+            <div class="menu-btn" id="quit">Quit</div>
+        </div>
+        <div class="menu-btn wide" id="settings">Settings & Options</div>
     </div>
-    <div class="menu-btn wide" id="settings">Settings & Options</div>
-  </div>
 </div>
 
+<!-- WORLD MENU -->
 <div id="worldMenu">
-  <h2>Select Member</h2>
-  <div id="worldList"></div>
-  <div class="menu-btn" onclick="backToMenu()">Back</div>
+    <h2>Select Member</h2>
+    <div id="worldList"></div>
+    <div class="menu-btn" onclick="backToMenu()">Back</div>
 </div>
 
+<!-- LOADING SCREEN -->
 <div id="loading">
-  <h2 id="loadingText">Loading...</h2>
-  <div class="bar"><div class="progress" id="progressBar"></div></div>
-  <canvas id="loading-canvas" width="120" height="120"></canvas>
+    <h2 id="loadingText">Loading...</h2>
+    <div class="bar"><div class="progress" id="progressBar"></div></div>
+    <canvas id="loading-canvas" width="120" height="120"></canvas>
 </div>
 
+<!-- PROFILE PAGE -->
 <div id="profile">
-  <img id="pfp">
-  <h2 id="name"></h2>
-  <p id="bio"></p>
-  <div class="menu-btn" onclick="backToWorlds()">Back</div>
+    <img id="pfp">
+    <h2 id="name"></h2>
+    <p id="bio"></p>
+    <div class="menu-btn" onclick="backToWorlds()">Back</div>
 </div>
 
+<!-- SETTINGS -->
 <div id="settingsModal">
-  <div id="settingsBox">
-    <h3>Settings</h3>
-    <label>Width</label>
-    <input type="range" id="widthRange" min="300" max="1920" value="1000">
-    <label>Height</label>
-    <input type="range" id="heightRange" min="300" max="1080" value="700">
-    <label>Volume</label>
-    <input type="range" id="volumeRange" min="0" max="100" value="50">
-    <div class="menu-btn" id="closeSettings">Close</div>
-  </div>
+    <div id="settingsBox">
+        <h3>Settings</h3>
+        <label>Width</label>
+        <input type="range" id="widthRange" min="300" max="1920" value="1000">
+        <label>Height</label>
+        <input type="range" id="heightRange" min="300" max="1080" value="700">
+        <label>Volume</label>
+        <input type="range" id="volumeRange" min="0" max="100" value="50">
+        <div class="menu-btn" id="closeSettings">Close</div>
+    </div>
 </div>
 
 <audio id="loadSound" src="https://freesound.org/data/previews/235/235052_3981938-lq.mp3"></audio>
 
 <script>
-// WORLDS
-const worlds=[
-  {name:"Hanako",desc:"Founder",img:"https://i.pinimg.com/474x/03/da/f4/03daf470525f376f0a797e687bcd8def.jpg",bio:"Founder of Zone15"},
-  {name:"Prxn",desc:"Owner",img:"https://files.catbox.moe/a2wpy3.webp",bio:"Owner of Zone15"},
-  {name:"Suicide Hotline",desc:"Co Owner",img:"https://i.pinimg.com/1200x/7d/f4/4a/7df44a4e2cd341398ca427bfc74f1cfa.jpg",bio:"Co Owner"},
-  {name:"Primer",desc:"Co Owner",img:"https://i.pinimg.com/736x/3b/a2/4e/3ba24e404f5f3454c7da6d9bc8ebff90.jpg",bio:"Co Owner"},
-  {name:"Purps",desc:"Co Owner",img:"https://i.pinimg.com/1200x/0a/f9/9f/0af99fe3a5fc6713ef5a75b42a4eacba.jpg",bio:"Co Owner"}
+/* ------------------ WORLD DATA ------------------ */
+const worlds = [
+    {name:"Hanako",desc:"Founder",img:"https://i.pinimg.com/474x/03/da/f4/03daf470525f376f0a797e687bcd8def.jpg",bio:"Founder of Zone15"},
+    {name:"Prxn",desc:"Owner",img:"https://files.catbox.moe/a2wpy3.webp",bio:"Owner of Zone15"},
+    {name:"Suicide Hotline",desc:"Co Owner",img:"https://i.pinimg.com/1200x/7d/f4/4a/7df44a4e2cd341398ca427bfc74f1cfa.jpg",bio:"Co Owner"},
+    {name:"Primer",desc:"Co Owner",img:"https://i.pinimg.com/736x/3b/a2/4e/3ba24e404f5f3454c7da6d9bc8ebff90.jpg",bio:"Co Owner"},
+    {name:"Purps",desc:"Co Owner",img:"https://i.pinimg.com/1200x/0a/f9/9f/0af99fe3a5fc6713ef5a75b42a4eacba.jpg",bio:"Co Owner"}
 ];
 
-const play=document.getElementById('play');
-const quit=document.getElementById('quit');
-const settings=document.getElementById('settings');
-const closeSettings=document.getElementById('closeSettings');
-const widthRange=document.getElementById('widthRange');
-const heightRange=document.getElementById('heightRange');
-const volumeRange=document.getElementById('volumeRange');
+/* ------------------ ELEMENT REFERENCES ------------------ */
+const play = document.getElementById('play');
+const quit = document.getElementById('quit');
+const settings = document.getElementById('settings');
+const closeSettings = document.getElementById('closeSettings');
+const widthRange = document.getElementById('widthRange');
+const heightRange = document.getElementById('heightRange');
+const volumeRange = document.getElementById('volumeRange');
 
-const menu=document.getElementById('menu');
-const worldMenu=document.getElementById('worldMenu');
-const worldList=document.getElementById('worldList');
-const loading=document.getElementById('loading');
-const progressBar=document.getElementById('progressBar');
-const loadingText=document.getElementById('loadingText');
+const menu = document.getElementById('menu');
+const worldMenu = document.getElementById('worldMenu');
+const worldList = document.getElementById('worldList');
 
-const profile=document.getElementById('profile');
-const pfp=document.getElementById('pfp');
-const nameEl=document.getElementById('name');
-const bioEl=document.getElementById('bio');
+const loading = document.getElementById('loading');
+const progressBar = document.getElementById('progressBar');
+const loadingCanvas = document.getElementById('loading-canvas');
+const ctx = loadingCanvas.getContext('2d');
+const loadingText = document.getElementById('loadingText');
 
-const loadSound=document.getElementById('loadSound');
+const profile = document.getElementById('profile');
+const pfp = document.getElementById('pfp');
+const nameEl = document.getElementById('name');
+const bioEl = document.getElementById('bio');
 
-// LOAD WORLDS
-worlds.forEach(w=>{
-  const div=document.createElement('div');
-  div.className='world';
-  div.innerHTML=`<img src="${w.img}"><div><b>${w.name}</b><br>${w.desc}</div>`;
-  div.onclick=()=>loadWorld(w);
-  worldList.appendChild(div);
+const loadSound = document.getElementById('loadSound');
+
+/* ------------------ INITIALIZE WORLD LIST ------------------ */
+worldList.innerHTML = '';
+worlds.forEach(world => {
+    const div = document.createElement('div');
+    div.className = 'world';
+    div.innerHTML = `<img src="${world.img}"><div><b>${world.name}</b><br>${world.desc}</div>`;
+    div.onclick = () => loadWorld(world);
+    worldList.appendChild(div);
 });
 
-// MENU BUTTONS
-play.onclick=()=>{menu.style.display='none'; worldMenu.style.display='block';};
-quit.onclick=()=>{window.close();alert('Close tab manually')};
-settings.onclick=()=>{document.getElementById('settingsModal').style.display='flex'};
-closeSettings.onclick=()=>{document.getElementById('settingsModal').style.display='none'};
-widthRange.oninput=()=>{worldMenu.style.width=widthRange.value+'px'};
-heightRange.oninput=()=>{worldMenu.style.height=heightRange.value+'px'};
-volumeRange.oninput=()=>{loadSound.volume=volumeRange.value/100;};
+/* ------------------ BUTTON HANDLERS ------------------ */
+play.onclick = () => {
+    menu.style.display = 'none';
+    worldMenu.style.display = 'block';
+};
 
-// BACK FUNCTIONS
-function backToWorlds(){profile.style.display='none'; worldMenu.style.display='block';}
-function backToMenu(){worldMenu.style.display='none'; menu.style.display='flex';}
+quit.onclick = () => {
+    window.close();
+    alert('Close tab manually');
+};
 
-// LOAD WORLD SIMPLE WITH PROGRESS BAR
-function loadWorld(w){
-  worldMenu.style.display='none';
-  loading.style.display='flex';
-  progressBar.style.width='0%';
-  let progress=0;
-  loadSound.currentTime=0;
-  loadSound.play();
-  const interval=setInterval(()=>{
-    progress++;
-    progressBar.style.width=progress+'%';
-    loadingText.innerText=`Loading ${w.name}... ${progress}%`;
-    if(progress>=100){
-      clearInterval(interval);
-      loading.style.display='none';
-      profile.style.display='flex';
-      pfp.src=w.img;
-      nameEl.innerText=w.name;
-      bioEl.innerText=w.bio;
-    }
-  },30);
+settings.onclick = () => { document.getElementById('settingsModal').style.display = 'flex'; };
+closeSettings.onclick = () => { document.getElementById('settingsModal').style.display = 'none'; };
+widthRange.oninput = () => { worldMenu.style.width = widthRange.value+'px'; };
+heightRange.oninput = () => { worldMenu.style.height = heightRange.value+'px'; };
+volumeRange.oninput = () => { loadSound.volume = volumeRange.value/100; };
+
+/* ------------------ BACK BUTTONS ------------------ */
+function backToWorlds() {
+    profile.style.display = 'none';
+    worldMenu.style.display = 'block';
+}
+
+function backToMenu() {
+    worldMenu.style.display = 'none';
+    menu.style.display = 'flex';
+}
+
+/* ------------------ LOAD WORLD WITH PROGRESS AND BLOCK-BUILD PFP ------------------ */
+function loadWorld(world) {
+    worldMenu.style.display = 'none';
+    loading.style.display = 'flex';
+    progressBar.style.width = '0%';
+    ctx.clearRect(0,0,loadingCanvas.width,loadingCanvas.height);
+    const img = new Image();
+    img.src = world.img;
+    let progress = 0;
+    loadSound.currentTime = 0;
+    loadSound.play();
+
+    img.onload = () => {
+        const gridSize = 12; // 10x10 blocks
+        const blockW = loadingCanvas.width/gridSize;
+        const blockH = loadingCanvas.height/gridSize;
+
+        function step() {
+            progress++;
+            progressBar.style.width = progress + '%';
+            loadingText.innerText = `Loading ${world.name}... ${progress}%`;
+
+            // Draw blocks proportional to progress
+            const blocksToDraw = Math.floor(progress/100 * gridSize*gridSize);
+            ctx.clearRect(0,0,loadingCanvas.width,loadingCanvas.height);
+            for(let i=0;i<blocksToDraw;i++){
+                const row = Math.floor(i/gridSize);
+                const col = i%gridSize;
+                ctx.drawImage(
+                    img,
+                    col*(img.width/gridSize),
+                    row*(img.height/gridSize),
+                    img.width/gridSize,
+                    img.height/gridSize,
+                    col*blockW,
+                    row*blockH,
+                    blockW,
+                    blockH
+                );
+            }
+
+            if(progress<100){
+                requestAnimationFrame(step);
+            } else {
+                loading.style.display = 'none';
+                profile.style.display = 'flex';
+                pfp.src = world.img;
+                nameEl.innerText = world.name;
+                bioEl.innerText = world.bio;
+            }
+        }
+
+        step();
+    };
 }
 </script>
-
 </body>
 </html>

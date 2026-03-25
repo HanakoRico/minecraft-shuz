@@ -38,12 +38,11 @@ body{margin:0;font-family:'Arial Black',Arial,sans-serif;overflow:hidden}
 #loading{display:none;position:fixed;inset:0;background:black;color:white;z-index:30;align-items:center;justify-content:center;flex-direction:column;text-align:center}
 .bar{width:300px;height:20px;border:2px solid white;margin-top:20px;overflow:hidden}
 .progress{height:100%;width:0%;background:lime;transition:width 0.05s linear}
+#loading-canvas{border:2px solid white;margin-top:20px}
 
 /* PROFILE */
 #profile{display:none;position:fixed;inset:0;background:black;color:white;z-index:25;align-items:center;justify-content:center;flex-direction:column;text-align:center}
-#pfp-container{position:relative;width:120px;height:120px;margin-bottom:10px}
-#pfp{width:120px;height:120px;border-radius:10px;display:none}
-#pfp-canvas{position:absolute;top:0;left:0;width:120px;height:120px}
+#pfp{width:120px;height:120px;border-radius:10px;margin-bottom:10px}
 
 /* SETTINGS */
 #settingsModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
@@ -79,13 +78,11 @@ input{width:100%;margin:10px 0}
 <div id="loading">
   <h2 id="loadingText">Loading User...</h2>
   <div class="bar"><div class="progress" id="progressBar"></div></div>
+  <canvas id="loading-canvas" width="120" height="120"></canvas>
 </div>
 
 <div id="profile">
-  <div id="pfp-container">
-    <img id="pfp">
-    <canvas id="pfp-canvas" width="120" height="120"></canvas>
-  </div>
+  <img id="pfp">
   <h2 id="name"></h2>
   <p id="bio"></p>
   <div class="menu-btn" onclick="backToWorlds()">Back</div>
@@ -104,14 +101,16 @@ input{width:100%;margin:10px 0}
   </div>
 </div>
 
+<audio id="loadSound" src="https://freesound.org/data/previews/235/235052_3981938-lq.mp3"></audio>
+
 <script>
 // WORLDS
 const worlds=[
-  {name:"Hanako",desc:"Founder of Zone15",img:"https://i.pinimg.com/474x/03/da/f4/03daf470525f376f0a797e687bcd8def.jpg",bio:"Founder of Zone15"},
-  {name:"Prxn",desc:"Owner of Zone15",img:"https://files.catbox.moe/a2wpy3.webp",bio:"Owner of Zone15"},
-  {name:"SuicideHotline",desc:"Co Owner of Zone15",img:"https://i.pinimg.com/1200x/7d/f4/4a/7df44a4e2cd341398ca427bfc74f1cfa.jpg",bio:"Co Owner"},
-  {name:"Primer",desc:"Co Owner of Zone15",img:"https://i.pinimg.com/736x/3b/a2/4e/3ba24e404f5f3454c7da6d9bc8ebff90.jpg",bio:"Co Owner"},
-  {name:"Purps",desc:"Co Owner of Zone15",img:"https://i.pinimg.com/1200x/0a/f9/9f/0af99fe3a5fc6713ef5a75b42a4eacba.jpg",bio:"Co Owner"}
+  {name:"Hanako",desc:"Founder",img:"https://i.pinimg.com/474x/03/da/f4/03daf470525f376f0a797e687bcd8def.jpg",bio:"Founder of Zone15"},
+  {name:"Prxn",desc:"Owner",img:"https://files.catbox.moe/a2wpy3.webp",bio:"Owner of Zone15"},
+  {name:"Suicide Hotline",desc:"Co Owner",img:"https://i.pinimg.com/1200x/7d/f4/4a/7df44a4e2cd341398ca427bfc74f1cfa.jpg",bio:"Co Owner"},
+  {name:"Primer",desc:"Co Owner",img:"https://i.pinimg.com/736x/3b/a2/4e/3ba24e404f5f3454c7da6d9bc8ebff90.jpg",bio:"Co Owner"},
+  {name:"Purps",desc:"Co Owner",img:"https://i.pinimg.com/1200x/0a/f9/9f/0af99fe3a5fc6713ef5a75b42a4eacba.jpg",bio:"Co Owner"}
 ];
 
 const play=document.getElementById('play');
@@ -128,12 +127,15 @@ const worldList=document.getElementById('worldList');
 const loading=document.getElementById('loading');
 const progressBar=document.getElementById('progressBar');
 const loadingText=document.getElementById('loadingText');
+const canvas=document.getElementById('loading-canvas');
+const ctx=canvas.getContext('2d');
+
 const profile=document.getElementById('profile');
 const pfp=document.getElementById('pfp');
-const canvas=document.getElementById('pfp-canvas');
-const ctx=canvas.getContext('2d');
 const nameEl=document.getElementById('name');
 const bioEl=document.getElementById('bio');
+
+const loadSound=document.getElementById('loadSound');
 
 // LOAD WORLDS
 worlds.forEach(w=>{
@@ -144,68 +146,62 @@ worlds.forEach(w=>{
   worldList.appendChild(div);
 });
 
-// BUTTONS
+// MENU BUTTONS
 play.onclick=()=>{menu.style.display='none'; worldMenu.style.display='block';};
 quit.onclick=()=>{window.close();alert('Close tab manually')};
 settings.onclick=()=>{document.getElementById('settingsModal').style.display='flex'};
 closeSettings.onclick=()=>{document.getElementById('settingsModal').style.display='none'};
-
 widthRange.oninput=()=>{worldMenu.style.width=widthRange.value+'px'};
 heightRange.oninput=()=>{worldMenu.style.height=heightRange.value+'px'};
-volumeRange.oninput=()=>{console.log("Volume:", volumeRange.value)};
+volumeRange.oninput=()=>{console.log("Volume:",volumeRange.value)};
 
-// LOADING + PROFILE "PIXEL BUILD"
+// BACK FUNCTIONS
+function backToWorlds(){profile.style.display='none'; worldMenu.style.display='block';}
+function backToMenu(){worldMenu.style.display='none'; menu.style.display='flex';}
+
+// LOAD WORLD WITH PIXEL BUILD
 function loadWorld(w){
   worldMenu.style.display='none';
   profile.style.display='none';
   loading.style.display='flex';
-  loadingText.innerText='Loading User...';
+  loadingText.innerText='Loading '+w.name+'...';
   progressBar.style.width='0%';
-  pfp.style.display='none';
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  let progress=0;
-  const interval=setInterval(()=>{
-    progress+=2;
-    if(progress>100) progress=100;
-    progressBar.style.width=progress+'%';
-    loadingText.innerText=`Loading ${w.name}... ${progress}%`;
-    if(progress===100){
-      clearInterval(interval);
-      loading.style.display='none';
-      buildProfile(w);
-    }
-  },40);
-}
-
-// BUILD PROFILE PIXEL BY PIXEL
-function buildProfile(w){
-  profile.style.display='flex';
-  nameEl.innerText=w.name;
-  bioEl.innerText=w.bio;
   const img=new Image();
   img.crossOrigin='anonymous';
   img.src=w.img;
-  img.onload=()=>{
-    const step=5; // pixels per step
-    let y=0;
-    const interval=setInterval(()=>{
+  let progress=0;
+  const step=5;
+  let y=0;
+
+  loadSound.currentTime=0;
+  loadSound.play();
+
+  const interval=setInterval(()=>{
+    progress+=1;
+    if(progress>100) progress=100;
+    progressBar.style.width=progress+'%';
+    loadingText.innerText=`Loading ${w.name}... ${progress}%`;
+
+    if(img.complete && y<canvas.height){
       for(let i=0;i<canvas.width;i+=step){
         ctx.drawImage(img,i,y,step,step,i,y,step,step);
       }
       y+=step;
-      if(y>=canvas.height){
-        clearInterval(interval);
-        pfp.src=w.img;
-        pfp.style.display='block';
-        ctx.clearRect(0,0,canvas.width,canvas.height); // remove canvas
-      }
-    },50);
-  };
-}
+    }
 
-function backToWorlds(){profile.style.display='none'; worldMenu.style.display='block';}
-function backToMenu(){worldMenu.style.display='none'; menu.style.display='flex';}
+    if(progress===100){
+      clearInterval(interval);
+      loading.style.display='none';
+      profile.style.display='flex';
+      pfp.src=w.img;
+      nameEl.innerText=w.name;
+      bioEl.innerText=w.bio;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+  },40);
+}
 </script>
 
 </body>

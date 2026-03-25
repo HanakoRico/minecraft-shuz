@@ -13,19 +13,28 @@ body{margin:0;font-family:'Arial Black',Arial,sans-serif;overflow:hidden}
 #title{font-size:72px;letter-spacing:4px;text-shadow:6px 6px 0 black,2px 2px 0 #555}
 #splash{position:absolute;right:-130px;top:28px;color:yellow;font-size:24px;transform:rotate(-20deg);animation:splashAnim 1.5s infinite alternate}
 @keyframes splashAnim{from{transform:rotate(-20deg) scale(1)}to{transform:rotate(-20deg) scale(1.1)}}
-#buttons{position:relative;z-index:2;display:flex;gap:20px;flex-direction:column;align-items:center;transform:translateY(-70px);}
+
+#buttons{position:relative;z-index:2;display:flex;gap:20px;flex-direction:column;align-items:center;transform:translateY(-70px)}
 .row{display:flex;gap:20px}
 .menu-btn{width:200px;height:50px;background:#6b6b6b;border:3px solid #2a2a2a;box-shadow:inset -3px -3px 0 #2a2a2a,inset 3px 3px 0 #9b9b9b;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
 .menu-btn:hover{background:#8a8a8a}
 .wide{width:420px}
-#footer{position:absolute;bottom:10px;width:100%;text-align:center;font-size:14px;opacity:.7;z-index:2}
-#main{display:none;height:100vh;width:100vw;background:black;color:white;justify-content:center;align-items:center;font-size:32px}
-.fadeOut{animation:fadeOut 1s forwards}@keyframes fadeOut{to{opacity:0}}
-.fadeIn{animation:fadeIn 1s forwards}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* SETTINGS MODAL */
+#footer{position:absolute;bottom:10px;width:100%;text-align:center;font-size:14px;opacity:.7;z-index:2}
+
+/* WORLD MENU */
+#worldMenu{display:none;position:fixed;inset:0;background:#111;color:white;z-index:15;padding:20px}
+.world{display:flex;align-items:center;gap:15px;padding:10px;margin:10px 0;background:#333;cursor:pointer}
+.world:hover{background:#555}
+.world img{width:60px;height:60px;object-fit:cover;border:2px solid #000}
+
+/* PROFILE PAGE */
+#profile{display:none;position:fixed;inset:0;background:#000;color:white;z-index:25;align-items:center;justify-content:center;flex-direction:column}
+#profile img{width:120px;height:120px;border-radius:10px;margin-bottom:10px}
+
+/* SETTINGS */
 #settingsModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20}
-#settingsBox{background:#2b2b2b;padding:20px;border:3px solid #111;box-shadow:0 0 20px black;color:white;width:300px;text-align:center}
+#settingsBox{background:#2b2b2b;padding:20px;border:3px solid #111;color:white;width:300px;text-align:center}
 input{width:100%;margin:10px 0}
 .close{margin-top:10px;background:#6b6b6b;padding:10px;cursor:pointer}
 </style>
@@ -51,9 +60,22 @@ input{width:100%;margin:10px 0}
   <div id="footer">Minecraft Menu Clone</div>
 </div>
 
-<div id="main"><div>Welcome to Your Website</div></div>
+<!-- WORLD MENU -->
+<div id="worldMenu">
+  <h2>Select Member</h2>
+  <div id="worldList"></div>
+  <div class="menu-btn" onclick="backToMenu()">Back</div>
+</div>
 
-<!-- SETTINGS POPUP -->
+<!-- PROFILE PAGE -->
+<div id="profile">
+  <img id="pfp" src="">
+  <h2 id="name"></h2>
+  <p id="bio"></p>
+  <div class="menu-btn" onclick="backToWorlds()">Back</div>
+</div>
+
+<!-- SETTINGS -->
 <div id="settingsModal">
   <div id="settingsBox">
     <h3>Settings</h3>
@@ -66,6 +88,14 @@ input{width:100%;margin:10px 0}
 </div>
 
 <script>
+const worlds=[
+  {name:"Hanako",desc:"Founder",img:"https://via.placeholder.com/60",bio:"Founder of Zone15"},
+  {name:"Prxn",desc:"Owner",img:"https://via.placeholder.com/60",bio:"Owner of Zone15"},
+  {name:"Suicide Hotline",desc:"Co Owner",img:"https://via.placeholder.com/60",bio:"Co Owner"},
+  {name:"Primer",desc:"Co Owner",img:"https://via.placeholder.com/60",bio:"Co Owner"},
+  {name:"Purps",desc:"Co Owner",img:"https://via.placeholder.com/60",bio:"Co Owner"}
+];
+
 const play=document.getElementById('play');
 const quit=document.getElementById('quit');
 const settings=document.getElementById('settings');
@@ -74,24 +104,54 @@ const closeSettings=document.getElementById('closeSettings');
 const widthRange=document.getElementById('widthRange');
 const heightRange=document.getElementById('heightRange');
 const menu=document.getElementById('menu');
-const main=document.getElementById('main');
+const worldMenu=document.getElementById('worldMenu');
+const worldList=document.getElementById('worldList');
+const profile=document.getElementById('profile');
+
+const pfp=document.getElementById('pfp');
+const nameEl=document.getElementById('name');
+const bioEl=document.getElementById('bio');
+
+// LOAD WORLDS
+worldList.innerHTML='';
+worlds.forEach(w=>{
+  const div=document.createElement('div');
+  div.className='world';
+  div.innerHTML=`<img src="${w.img}"><div><b>${w.name}</b><br>${w.desc}</div>`;
+  div.onclick=()=>openProfile(w);
+  worldList.appendChild(div);
+});
+
+function openProfile(w){
+  worldMenu.style.display='none';
+  profile.style.display='flex';
+  pfp.src=w.img;
+  nameEl.innerText=w.name;
+  bioEl.innerText=w.bio;
+}
+
+function backToWorlds(){
+  profile.style.display='none';
+  worldMenu.style.display='block';
+}
 
 play.onclick=()=>{
-  menu.classList.add('fadeOut');
-  setTimeout(()=>{
-    menu.style.display='none';
-    main.style.display='flex';
-    main.classList.add('fadeIn');
-  },1000);
+  menu.style.display='none';
+  worldMenu.style.display='block';
 };
 
-quit.onclick=()=>{window.close();alert('Close the tab manually.')};
+quit.onclick=()=>{window.close();alert('Close tab manually')};
 
 settings.onclick=()=>{modal.style.display='flex'};
 closeSettings.onclick=()=>{modal.style.display='none'};
 
-widthRange.oninput=()=>{main.style.width=widthRange.value+'px'};
-heightRange.oninput=()=>{main.style.height=heightRange.value+'px'};
+widthRange.oninput=()=>{worldMenu.style.width=widthRange.value+'px'};
+heightRange.oninput=()=>{worldMenu.style.height=heightRange.value+'px'};
+
+function backToMenu(){
+  worldMenu.style.display='none';
+  menu.style.display='flex';
+}
 </script>
 
 </body>

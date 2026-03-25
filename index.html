@@ -4,41 +4,120 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Minecraft Menu Clone</title>
+
 <style>
 body{margin:0;font-family:'Arial Black',Arial,sans-serif;overflow:hidden}
-#menu{position:fixed;inset:0;background:url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hZ2VfNThy/cnRuYjVsOXNlMS5w/bmc') no-repeat center/cover;display:flex;align-items:center;justify-content:center;color:white}
-#menu::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.4)}
-#title-wrap{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:2;text-align:center}
-#title-inner{position:relative;display:inline-block}
-#title{font-size:72px;letter-spacing:4px;text-shadow:6px 6px 0 black,2px 2px 0 #555}
-#splash{position:absolute;right:-130px;top:28px;color:yellow;font-size:24px;transform:rotate(-20deg);animation:splashAnim 1.5s infinite alternate}
-@keyframes splashAnim{from{transform:rotate(-20deg) scale(1)}to{transform:rotate(-20deg) scale(1.1)}}
 
-#buttons{position:relative;z-index:2;display:flex;gap:20px;flex-direction:column;align-items:center;transform:translateY(-70px)}
+/* MAIN MENU */
+#menu{
+  position:fixed;inset:0;
+  background:url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hZ2VfNThy/cnRuYjVsOXNlMS5w/bmc') center/cover;
+  display:flex;align-items:center;justify-content:center;color:white
+}
+#menu::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.4)}
+
+#title-wrap{
+  position:absolute;top:60px;left:50%;
+  transform:translateX(-50%);
+  z-index:2;text-align:center
+}
+#title-inner{position:relative;display:inline-block}
+
+#title{
+  font-size:72px;
+  text-shadow:6px 6px 0 black,2px 2px 0 #555
+}
+
+#splash{
+  position:absolute;right:-130px;top:28px;
+  color:yellow;font-size:24px;
+  transform:rotate(-20deg);
+  animation:splashAnim 1.5s infinite alternate
+}
+@keyframes splashAnim{
+  from{transform:rotate(-20deg) scale(1)}
+  to{transform:rotate(-20deg) scale(1.1)}
+}
+
+/* BUTTONS */
+#buttons{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;gap:20px;
+  transform:translateY(-70px)
+}
 .row{display:flex;gap:20px}
-.menu-btn{width:200px;height:50px;background:#6b6b6b;border:3px solid #2a2a2a;box-shadow:inset -3px -3px 0 #2a2a2a,inset 3px 3px 0 #9b9b9b;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
+
+.menu-btn{
+  width:200px;height:50px;
+  background:#6b6b6b;
+  border:3px solid #2a2a2a;
+  box-shadow:inset -3px -3px 0 #2a2a2a,inset 3px 3px 0 #9b9b9b;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
 .menu-btn:hover{background:#8a8a8a}
 .wide{width:420px}
 
-#footer{position:absolute;bottom:10px;width:100%;text-align:center;font-size:14px;opacity:.7;z-index:2}
-
 /* WORLD MENU */
-#worldMenu{display:none;position:fixed;inset:0;background:#111;color:white;z-index:15;padding:20px}
-.world{display:flex;align-items:center;gap:15px;padding:10px;margin:10px 0;background:#333;cursor:pointer}
-.world:hover{background:#555}
-.world img{width:60px;height:60px;object-fit:cover;border:2px solid #000}
+#worldMenu{
+  display:none;position:fixed;inset:0;
+  background:url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hZ2VfNThy/cnRuYjVsOXNlMS5w/bmc') center/cover;
+  color:white;z-index:15;padding:20px
+}
 
-/* PROFILE PAGE */
-#profile{display:none;position:fixed;inset:0;background:#000;color:white;z-index:25;align-items:center;justify-content:center;flex-direction:column}
+.world{
+  display:flex;align-items:center;
+  gap:15px;padding:10px;margin:10px 0;
+  background:#333;cursor:pointer
+}
+.world:hover{background:#555}
+.world img{
+  width:60px;height:60px;
+  object-fit:cover;border:2px solid black
+}
+
+/* LOADING */
+#loading{
+  display:none;position:fixed;inset:0;
+  background:black;color:white;
+  z-index:30;
+  align-items:center;justify-content:center;
+  flex-direction:column
+}
+.bar{width:300px;height:20px;border:2px solid white;margin-top:20px}
+.progress{height:100%;width:0%;background:lime;animation:load 2s linear forwards}
+@keyframes load{from{width:0%}to{width:100%}}
+
+/* PROFILE */
+#profile{
+  display:none;position:fixed;inset:0;
+  background:black;color:white;
+  z-index:25;
+  align-items:center;justify-content:center;
+  flex-direction:column
+}
 #profile img{width:120px;height:120px;border-radius:10px;margin-bottom:10px}
 
 /* SETTINGS */
-#settingsModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20}
-#settingsBox{background:#2b2b2b;padding:20px;border:3px solid #111;color:white;width:300px;text-align:center}
+#settingsModal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;justify-content:center;
+  z-index:50;
+}
+#settingsBox{
+  background:#2b2b2b;
+  padding:20px;
+  border:3px solid #111;
+  width:300px;
+  text-align:center;
+}
 input{width:100%;margin:10px 0}
-.close{margin-top:10px;background:#6b6b6b;padding:10px;cursor:pointer}
 </style>
 </head>
+
 <body>
 
 <div id="menu">
@@ -56,18 +135,20 @@ input{width:100%;margin:10px 0}
     </div>
     <div class="menu-btn wide" id="settings">Settings & Options</div>
   </div>
+</div>
 
-
-<!-- WORLD MENU -->
 <div id="worldMenu">
   <h2>Select Member</h2>
   <div id="worldList"></div>
-  <div class="menu-btn" onclick="backToMenu()">Back</div>
 </div>
 
-<!-- PROFILE PAGE -->
+<div id="loading">
+  <h2>Loading World...</h2>
+  <div class="bar"><div class="progress"></div></div>
+</div>
+
 <div id="profile">
-  <img id="pfp" src="">
+  <img id="pfp">
   <h2 id="name"></h2>
   <p id="bio"></p>
   <div class="menu-btn" onclick="backToWorlds()">Back</div>
@@ -77,19 +158,24 @@ input{width:100%;margin:10px 0}
 <div id="settingsModal">
   <div id="settingsBox">
     <h3>Settings</h3>
+
     <label>Width</label>
     <input type="range" id="widthRange" min="300" max="1920" value="1000">
+
     <label>Height</label>
     <input type="range" id="heightRange" min="300" max="1080" value="700">
-    <div class="close" id="closeSettings">Close</div>
+
+    <label>Volume</label>
+    <input type="range" id="volumeRange" min="0" max="100" value="50">
+
+    <div class="menu-btn" id="closeSettings">Close</div>
   </div>
 </div>
 
 <script>
 const worlds=[
-  {name:"Hanako",desc:"Founder",img:"https://i.pinimg.com/474x/03/da/f4/03daf470525f376f0a797e687bcd8def.jpg",bio:"Founder of Zone15"},
-  {name:"Prxn",desc:"Owner",img:"https://files.catbox.moe/a2wpy3.webp",bio:"Owner of Zone15"},
-  {name:"Suicide Hotline",desc:"Co Owner",img:"https://i.pinimg.com/1200x/7d/f4/4a/7df44a4e2cd341398ca427bfc74f1cfa.jpg",bio:"Co Owner"},
+  {name:"Hanako",desc:"Founder",img:"https://i.pinimg.com/474x/03/da/f4/03daf470525f376f0a797e687bcd8def.jpg",bio:"Founder"},
+  {name:"Prxn",desc:"Owner",img:"https://files.catbox.moe/a2wpy3.webp",bio:"Owner"},
   {name:"Primer",desc:"Co Owner",img:"https://i.pinimg.com/736x/3b/a2/4e/3ba24e404f5f3454c7da6d9bc8ebff90.jpg",bio:"Co Owner"},
   {name:"Purps",desc:"Co Owner",img:"https://i.pinimg.com/1200x/0a/f9/9f/0af99fe3a5fc6713ef5a75b42a4eacba.jpg",bio:"Co Owner"}
 ];
@@ -101,9 +187,12 @@ const modal=document.getElementById('settingsModal');
 const closeSettings=document.getElementById('closeSettings');
 const widthRange=document.getElementById('widthRange');
 const heightRange=document.getElementById('heightRange');
+const volumeRange=document.getElementById('volumeRange');
+
 const menu=document.getElementById('menu');
 const worldMenu=document.getElementById('worldMenu');
 const worldList=document.getElementById('worldList');
+const loading=document.getElementById('loading');
 const profile=document.getElementById('profile');
 
 const pfp=document.getElementById('pfp');
@@ -111,17 +200,46 @@ const nameEl=document.getElementById('name');
 const bioEl=document.getElementById('bio');
 
 // LOAD WORLDS
-worldList.innerHTML='';
 worlds.forEach(w=>{
   const div=document.createElement('div');
   div.className='world';
   div.innerHTML=`<img src="${w.img}"><div><b>${w.name}</b><br>${w.desc}</div>`;
-  div.onclick=()=>openProfile(w);
+  div.onclick=()=>loadWorld(w);
   worldList.appendChild(div);
 });
 
-function openProfile(w){
+// PLAY
+play.onclick=()=>{
+  menu.style.display='none';
+  worldMenu.style.display='block';
+};
+
+// QUIT
+quit.onclick=()=>{window.close();alert('Close tab manually')};
+
+// SETTINGS
+settings.onclick=()=>{modal.style.display='flex'};
+closeSettings.onclick=()=>{modal.style.display='none'};
+
+// SLIDERS
+widthRange.oninput=()=>{worldMenu.style.width=widthRange.value+'px'};
+heightRange.oninput=()=>{worldMenu.style.height=heightRange.value+'px'};
+volumeRange.oninput=()=>{
+  console.log("Volume:", volumeRange.value);
+};
+
+// LOADING
+function loadWorld(w){
   worldMenu.style.display='none';
+  loading.style.display='flex';
+
+  setTimeout(()=>{
+    loading.style.display='none';
+    openProfile(w);
+  },2000);
+}
+
+function openProfile(w){
   profile.style.display='flex';
   pfp.src=w.img;
   nameEl.innerText=w.name;
@@ -131,24 +249,6 @@ function openProfile(w){
 function backToWorlds(){
   profile.style.display='none';
   worldMenu.style.display='block';
-}
-
-play.onclick=()=>{
-  menu.style.display='none';
-  worldMenu.style.display='block';
-};
-
-quit.onclick=()=>{window.close();alert('Close tab manually')};
-
-settings.onclick=()=>{modal.style.display='flex'};
-closeSettings.onclick=()=>{modal.style.display='none'};
-
-widthRange.oninput=()=>{worldMenu.style.width=widthRange.value+'px'};
-heightRange.oninput=()=>{worldMenu.style.height=heightRange.value+'px'};
-
-function backToMenu(){
-  worldMenu.style.display='none';
-  menu.style.display='flex';
 }
 </script>
 

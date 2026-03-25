@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Menu Clone</title>
+<style>
+body{margin:0;font-family:'Arial Black',Arial,sans-serif;overflow:hidden}
+#menu{position:fixed;inset:0;background:url('https://imgs.search.brave.com/Hqk91guA_6Zq0w8PFZ5Pi4SXyIE6sROQgAo-M_tU0gw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1XzJz/M29vL3N0eWxlcy9i/YW5uZXJCYWNrZ3Jv/dW5kSW1hZ2VfNThy/cnRuYjVsOXNlMS5w/bmc') no-repeat center/cover;display:flex;align-items:center;justify-content:center;color:white}
+#menu::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.4)}
+#title-wrap{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:2;text-align:center}
+#title-inner{position:relative;display:inline-block}
+#title{font-size:72px;letter-spacing:4px;text-shadow:6px 6px 0 black,2px 2px 0 #555}
+#splash{position:absolute;right:-130px;top:28px;color:yellow;font-size:24px;transform:rotate(-20deg);animation:splashAnim 1.5s infinite alternate}
+@keyframes splashAnim{from{transform:rotate(-20deg) scale(1)}to{transform:rotate(-20deg) scale(1.1)}}
+#buttons{position:relative;z-index:2;display:flex;gap:20px;flex-direction:column;align-items:center;transform:translateY(-70px);}
+.row{display:flex;gap:20px}
+.menu-btn{width:200px;height:50px;background:#6b6b6b;border:3px solid #2a2a2a;box-shadow:inset -3px -3px 0 #2a2a2a,inset 3px 3px 0 #9b9b9b;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
+.menu-btn:hover{background:#8a8a8a}
+.wide{width:420px}
+#footer{position:absolute;bottom:10px;width:100%;text-align:center;font-size:14px;opacity:.7;z-index:2}
+#main{display:none;height:100vh;width:100vw;background:black;color:white;justify-content:center;align-items:center;font-size:32px}
+.fadeOut{animation:fadeOut 1s forwards}@keyframes fadeOut{to{opacity:0}}
+.fadeIn{animation:fadeIn 1s forwards}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* SETTINGS MODAL */
+#settingsModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20}
+#settingsBox{background:#2b2b2b;padding:20px;border:3px solid #111;box-shadow:0 0 20px black;color:white;width:300px;text-align:center}
+input{width:100%;margin:10px 0}
+.close{margin-top:10px;background:#6b6b6b;padding:10px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div id="menu">
+  <div id="title-wrap">
+    <div id="title-inner">
+      <div id="title">Zone15</div>
+      <div id="splash">Now only on Minecraft!</div>
+    </div>
+  </div>
+
+  <div id="buttons">
+    <div class="row">
+      <div class="menu-btn" id="play">Play</div>
+      <div class="menu-btn" id="quit">Quit</div>
+    </div>
+    <div class="menu-btn wide" id="settings">Settings & Options</div>
+  </div>
+
+  <div id="footer">Minecraft Menu Clone</div>
+</div>
+
+<div id="main"><div>Welcome to Your Website</div></div>
+
+<!-- SETTINGS POPUP -->
+<div id="settingsModal">
+  <div id="settingsBox">
+    <h3>Settings</h3>
+    <label>Width</label>
+    <input type="range" id="widthRange" min="300" max="1920" value="1000">
+    <label>Height</label>
+    <input type="range" id="heightRange" min="300" max="1080" value="700">
+    <div class="close" id="closeSettings">Close</div>
+  </div>
+</div>
+
+<script>
+const play=document.getElementById('play');
+const quit=document.getElementById('quit');
+const settings=document.getElementById('settings');
+const modal=document.getElementById('settingsModal');
+const closeSettings=document.getElementById('closeSettings');
+const widthRange=document.getElementById('widthRange');
+const heightRange=document.getElementById('heightRange');
+const menu=document.getElementById('menu');
+const main=document.getElementById('main');
+
+play.onclick=()=>{
+  menu.classList.add('fadeOut');
+  setTimeout(()=>{
+    menu.style.display='none';
+    main.style.display='flex';
+    main.classList.add('fadeIn');
+  },1000);
+};
+
+quit.onclick=()=>{window.close();alert('Close the tab manually.')};
+
+settings.onclick=()=>{modal.style.display='flex'};
+closeSettings.onclick=()=>{modal.style.display='none'};
+
+widthRange.oninput=()=>{main.style.width=widthRange.value+'px'};
+heightRange.oninput=()=>{main.style.height=heightRange.value+'px'};
+</script>
+
+</body>
+</html>
